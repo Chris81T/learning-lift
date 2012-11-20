@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>de.learning.lift</groupId>
+  <artifactId>example</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>learning lift | example project by Christian [ chris81t@googlemail.com ] </name>
+  <description>simply use this to build both sub project's</description>
+  <modules>
+  	<module>java-service</module>
+  	<module>lift-client</module>
+  </modules>
+  
+  <!-- global properties for the modules -->
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+   
+</project>
