@@ -37,7 +37,8 @@ class ArticlePreviews extends CommonSnippet {
 		 */
 		val articles = asScalaList(BlogJavaService.getAllArticlePreviews)
 		"* *" #> articles.map {article =>
-			"@article-title" #> article.getTitle
+			"@article-title" #> article.getTitle &
+			"a [href]" #> Article.menu.calcHref(BlogJavaService.getArticle(article.getArticleId)) // TODO this is a first test to see, if something at all will work !!! Normally I do not want to call each article! I'm not really shure, how the Menu.param work's !!!
 		}
   }
 
