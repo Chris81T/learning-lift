@@ -10,6 +10,8 @@ import sitemap._
 import Loc._
 import net.liftmodules.JQueryModule
 import net.liftweb.http.js.jquery._
+import code.snippet.{PreviewFilter, Article}
+import code.snippet
 
 
 /**
@@ -24,7 +26,10 @@ class Boot {
     // Build SiteMap
     val entries = List(
       Menu.i("Welcome") / "index",
-			Menu.i("Blog") / "blog")
+			Menu.i("Blog") / "blog",
+			Article.menu,
+		  PreviewFilter.categoryMenu,
+			PreviewFilter.tagMenu)
 
 		// set the sitemap.  Note if you don't want access control for
     // each page, just comment this line out.

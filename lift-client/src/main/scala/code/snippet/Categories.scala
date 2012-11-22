@@ -21,11 +21,12 @@ class Categories extends CommonSnippet {
 
 	def render = {
 		val mainCategories = asScalaList(BlogJavaService.getMainCategories)
-
+		print("render categories...")
 		"* *" #> mainCategories.map {mainCategory =>
 			"@main-category-name" #> mainCategory.getName &
 			"#sub-category li" #> asScalaList(BlogJavaService.getSubCategories(mainCategory.getId)).map {subCategory =>
-				"@sub-category-name" #> subCategory.getName
+				"@sub-category-name" #> subCategory.getName &
+				"a [href]" #> PreviewFilter.categoryMenu.calcHref(Filter(subCategory.getName))
 			}
 		}
 	}

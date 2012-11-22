@@ -57,4 +57,12 @@ public class Category extends AbstractEntity {
 		result = 31 * result + (parent != null ? parent.hashCode() : 0);
 		return result;
 	}
+
+	@Override
+	public String toString() {
+		return "Category{" +
+				"name='" + name + '\'' +
+				", parent=" + parent +
+				"} " + super.toString();
+	}
 }

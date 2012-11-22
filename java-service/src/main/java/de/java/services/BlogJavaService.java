@@ -3,6 +3,7 @@ package de.java.services;
 import de.java.entities.Article;
 import de.java.entities.ArticlePreview;
 import de.java.entities.Category;
+import de.java.entities.Tag;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ public abstract class BlogJavaService {
 	private static List<Category> categories = new ArrayList<>();
 	private static List<Article> articles = new ArrayList<>();
 	private static List<ArticlePreview> articlePreviews = new ArrayList<>();
+	private static List<Tag> tags = new ArrayList<>();
 
 	static {
 		long id = 0;
@@ -40,14 +42,20 @@ public abstract class BlogJavaService {
 		categories.add(scala);
 		categories.add(linux);
 
-		createArticleAndPreview(id++, "Learning lift", getContent(), lift);
-		createArticleAndPreview(id++, "Asking the friendly and very helpful Lift googlegroup for support", getContent(), lift);
-		createArticleAndPreview(id++, "Learning Scala", getContent(), lift);
+		Tag hello = new Tag(id++, "hello");
+		Tag world = new Tag(id++, "World");
+
+		tags.add(hello);
+		tags.add(world);
+
+		createArticleAndPreview(id++, "Learning lift", getContent(), lift, hello);
+		createArticleAndPreview(id++, "Asking the friendly and very helpful Lift googlegroup for support", getContent(), lift, world);
+		createArticleAndPreview(id++, "Learning Scala", getContent(), scala, world);
 	}
 
-	private static void createArticleAndPreview(Long articleId, String title, String content, Category category) {
-		Article article = new Article(articleId, category, content, title);
-		ArticlePreview preview = new ArticlePreview(articleId, category, title);
+	private static void createArticleAndPreview(Long articleId, String title, String content, Category category, Tag tag) {
+		Article article = new Article(articleId, category, content, title, tag);
+		ArticlePreview preview = new ArticlePreview(articleId, category, tag, title);
 		articles.add(article);
 		articlePreviews.add(preview);
 	}
@@ -78,14 +86,36 @@ public abstract class BlogJavaService {
 		return main;
 	}
 
+	public static List<Tag> getTags() {
+		return tags;
+	}
+
 	public static List<ArticlePreview> getAllArticlePreviews() {
 		return articlePreviews;
 	}
 
-	public static List<ArticlePreview> articlePreviewsOfCategory(Long id) {
+	public static List<ArticlePreview> getArticlePreviewsOfCategory(Long id) {
 		List<ArticlePreview> previews = new ArrayList<>();
 		for (ArticlePreview preview : articlePreviews) {
 			if (preview.getCategory().getId().equals(id)) previews.add(preview);
+		}
+		return previews;
+	}
+
+	public static List<ArticlePreview> getArticlePreviewsOfCategory(String name) {
+		List<ArticlePreview> previews = new ArrayList<>();
+		for (ArticlePreview preview : articlePreviews) {
+			if (preview.getCategory().getName().equals(name)) previews.add(preview);
+		}
+		return previews;
+	}
+
+	public static List<ArticlePreview> getArticlePreviewsOfTag(String name) {
+		List<ArticlePreview> previews = new ArrayList<>();
+		for (ArticlePreview preview : articlePreviews) {
+			Tag tag = preview.getTag();
+			if (tag == null) continue;
+			if (tag.getName().equals(name)) previews.add(preview);
 		}
 		return previews;
 	}

@@ -38,4 +38,11 @@ public abstract class AbstractEntity implements Serializable {
 		return id != null ? id.hashCode() : 0;
 	}
 
+
+	@Override
+	public String toString() {
+		return "AbstractEntity{" +
+				"id=" + id +
+				'}';
+	}
 }

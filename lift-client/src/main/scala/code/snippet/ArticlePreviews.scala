@@ -18,27 +18,33 @@ import de.java.services.BlogJavaService
  * Time: 8:32 PM
  * To change this template use File | Settings | File Templates.
  */
-class ArticlePreviews extends CommonSnippet {
+class ArticlePreviews(filter: Filter) extends CommonSnippet {
+
+	def this() = {
+		this(Filter(""))
+	}
 
   def render = {
+		val filterName = S.attr("filter").get
+		println("Received filter = " + filterName)
 
-		/*
-		TODO:
-			- adapt class to support filtering by category
-			- add dynamic href article url
-		 */
+		var articles : List[de.java.entities.ArticlePreview] = Nil
 
+		filterName match {
+			case "category" => {
+				articles = asScalaList(BlogJavaService.getArticlePreviewsOfCategory(filter.value))
+				println("category - value of received filter=" + filter)
+			}
+			case "tag" => {
+				articles = asScalaList(BlogJavaService.getArticlePreviewsOfTag(filter.value))
+				println("tag - value of received filter=" + filter)
+			}
+			case _ => articles = asScalaList(BlogJavaService.getAllArticlePreviews)
+		}
 
-		/*
-			it is not necessary to return all real articles including content. It should be overhead. Only the complete
-			article is requested, if the visitor wants to read the article
-
-			--> An articlePreview knows the id of the article
-		 */
-		val articles = asScalaList(BlogJavaService.getAllArticlePreviews)
 		"* *" #> articles.map {article =>
 			"@article-title" #> article.getTitle &
-			"a [href]" #> Article.menu.calcHref(BlogJavaService.getArticle(article.getArticleId)) // TODO this is a first test to see, if something at all will work !!! Normally I do not want to call each article! I'm not really shure, how the Menu.param work's !!!
+			"a [href]" #> Article.menu.calcHref(ArticleId(article.getArticleId))
 		}
   }
 
