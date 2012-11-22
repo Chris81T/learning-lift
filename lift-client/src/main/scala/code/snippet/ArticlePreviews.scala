@@ -25,21 +25,27 @@ class ArticlePreviews(filter: Filter) extends CommonSnippet {
 	}
 
   def render = {
-		val filterName = S.attr("filter").get
-		println("Received filter = " + filterName)
-
 		var articles : List[de.java.entities.ArticlePreview] = Nil
 
-		filterName match {
-			case "category" => {
-				articles = asScalaList(BlogJavaService.getArticlePreviewsOfCategory(filter.value))
-				println("category - value of received filter=" + filter)
+		S.attr("filter") match {
+			case Full(name) => {
+				println("Received filter attribute with value = " + name)
+				name match {
+					case "category" => {
+						articles = asScalaList(BlogJavaService.getArticlePreviewsOfCategory(filter.value))
+						println("category - value of received filter=" + filter)
+					}
+					case "tag" => {
+						articles = asScalaList(BlogJavaService.getArticlePreviewsOfTag(filter.value))
+						println("tag - value of received filter=" + filter)
+					}
+					case _ => articles = asScalaList(BlogJavaService.getAllArticlePreviews)
+				}
 			}
-			case "tag" => {
-				articles = asScalaList(BlogJavaService.getArticlePreviewsOfTag(filter.value))
-				println("tag - value of received filter=" + filter)
+			case Empty|Failure => {
+				println("!! Something went wrong. Please fix missing attribute from the html !!")
+				"* *" #> "Could not load article-previews. Please try again later."
 			}
-			case _ => articles = asScalaList(BlogJavaService.getAllArticlePreviews)
 		}
 
 		"* *" #> articles.map {article =>
