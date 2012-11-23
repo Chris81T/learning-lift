@@ -52,7 +52,6 @@ object Article {
 		println("Returning requested article id=" + id)
 		id
 	}
-
 }
 
 
