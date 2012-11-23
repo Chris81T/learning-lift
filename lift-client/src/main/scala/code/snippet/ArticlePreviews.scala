@@ -42,7 +42,7 @@ class ArticlePreviews(filter: Filter) extends CommonSnippet {
 					case _ => articles = asScalaList(BlogJavaService.getAllArticlePreviews)
 				}
 			}
-			case Empty|Failure => {
+			case Empty|Failure(_,_,_) => {
 				println("!! Something went wrong. Please fix missing attribute from the html !!")
 				"* *" #> "Could not load article-previews. Please try again later."
 			}

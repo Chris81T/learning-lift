@@ -16,7 +16,7 @@ class Tags extends CommonSnippet {
 
 	def render = {
 		val tags = asScalaList(BlogJavaService.getTags)
-		print("render categories...")
+		println("render tags...")
 		"* *" #> tags.map {tag =>
 			"@tag-name" #> tag.getName &
 			"a [href]" #> PreviewFilter.tagMenu.calcHref(Filter(tag.getName))

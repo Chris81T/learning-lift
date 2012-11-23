@@ -1,9 +1,6 @@
 package de.java.services;
 
-import de.java.entities.Article;
-import de.java.entities.ArticlePreview;
-import de.java.entities.Category;
-import de.java.entities.Tag;
+import de.java.entities.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +22,7 @@ public abstract class BlogJavaService {
 	private static List<Article> articles = new ArrayList<>();
 	private static List<ArticlePreview> articlePreviews = new ArrayList<>();
 	private static List<Tag> tags = new ArrayList<>();
+	private static List<Comment> comments = new ArrayList<>();
 
 	static {
 		long id = 0;
@@ -48,16 +46,25 @@ public abstract class BlogJavaService {
 		tags.add(hello);
 		tags.add(world);
 
-		createArticleAndPreview(id++, "Learning lift", getContent(), lift, hello);
-		createArticleAndPreview(id++, "Asking the friendly and very helpful Lift googlegroup for support", getContent(), lift, world);
+		Article a1 = createArticleAndPreview(id++, "Learning lift", getContent(), lift, hello);
+		Article a2 = createArticleAndPreview(id++, "Asking the friendly and very helpful Lift googlegroup for support", getContent(), lift, world);
 		createArticleAndPreview(id++, "Learning Scala", getContent(), scala, world);
+
+		Comment c1 = new Comment(id++, a1.getId(), "Bruce Wayne", getContent(), "nice job");
+		Comment c2 = new Comment(id++, a1.getId(), "Clark Cent", getContent(), "I'm superman");
+		Comment c3 = new Comment(id++, a2.getId(), "Sheldon Cooper", getContent(), "Bazinga");
+
+		comments.add(c1);
+		comments.add(c2);
+		comments.add(c3);
 	}
 
-	private static void createArticleAndPreview(Long articleId, String title, String content, Category category, Tag tag) {
+	private static Article createArticleAndPreview(Long articleId, String title, String content, Category category, Tag tag) {
 		Article article = new Article(articleId, category, content, title, tag);
 		ArticlePreview preview = new ArticlePreview(articleId, category, tag, title);
 		articles.add(article);
 		articlePreviews.add(preview);
+		return article;
 	}
 
 	private static String getContent() {
@@ -125,5 +132,17 @@ public abstract class BlogJavaService {
 			if (article.getId().equals(articleId)) return article;
 		}
 		return null;
+	}
+
+	public static void addComment(Comment comment) {
+		comments.add(comment);
+	}
+
+	public static List<Comment> getCommentsForArticle(Long articleId) {
+		List<Comment> result = new ArrayList<>();
+		for (Comment comment : comments) {
+			if (comment.getArticleId().equals(articleId)) result.add(comment);
+		}
+		return result;
 	}
 }
