@@ -8,6 +8,7 @@ import util._
 import mapper._
 import Helpers._
 import de.java.services.BlogJavaService
+import xml.NodeSeq
 
 
 /**
@@ -34,9 +35,16 @@ object Article {
 
 
 	def getBoxIncludingId(articleId: String) : Box[ArticleId] = {
-		val box = Map(articleId -> ArticleId(articleId.toLong)).get(articleId)
-		println("Returning a box including the article id=" + box)
-		box
+		try {
+			val box = new Full[ArticleId](ArticleId(articleId.toLong))
+			println("Returning a Full box including the article id=" + box)
+			box
+		} catch {
+				case e : Exception => {
+					println("Something went wrong while trying to convert given id=" + articleId)
+					return new Full[ArticleId](ArticleId(-1)) // <--- there should be a better solution for it ?!
+				}
+		}
 	}
 
 	def getIdForArticle(articleId: ArticleId) : String = {
@@ -55,11 +63,17 @@ object Article {
  * Time: 5:31 PM
  * To change this template use File | Settings | File Templates.
  */
-class Article(articleId: ArticleId)  extends CommonSnippet {
+class Article(articleId: ArticleId) extends CommonSnippet {
 
-	def render = {
+	def render() : CssSel = {
 		val article = BlogJavaService.getArticle(articleId.id)
-		"h1 *" #> article.getTitle & "@article-content" #> article.getContent
+
+		// in real world exception handling should be the better choice
+		if (article != null) {
+			return "h1 *" #> article.getTitle & "@article-content" #> article.getContent
+		}
+		println("article not found! Given id=" + articleId.id)
+		S.redirectTo("/blog")
 	}
 
 }

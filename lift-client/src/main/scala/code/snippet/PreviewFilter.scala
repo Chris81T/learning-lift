@@ -21,28 +21,24 @@ object PreviewFilter {
 
 	lazy val categoryMenu = Menu.param[Filter]("Category Filter",
 																				 		 "Category Filter Menu",
-																						 categoryName => {
-																						 	val box = Map(categoryName -> Filter(categoryName)).get(categoryName)
-																							println("Returning a box including the category name")
-																							box
-																						 },
-																						 filter => {
-																							println("Returning value of filter=" + filter.value)
-																							filter.value
-																						 }
+																						 categoryName => getBoxIncludingName(categoryName),
+																						 filter => getFilterValAsString(filter)
 																						) / "blog" / "category" / *
 
 	lazy val tagMenu = Menu.param[Filter]("Tag Filter",
 																				"Tag Filter Menu",
-																				tagName => {
-																					val box = Map(tagName -> Filter(tagName)).get(tagName)
-																					println("Returning a box including the tag name")
-																					box
-																				},
-																				filter => {
-																					println("Returning value of filter=" + filter.value)
-																					filter.value
-																				}
+																				tagName => getBoxIncludingName(tagName),
+																				filter => getFilterValAsString(filter)
 																			 ) / "blog" / "tag" / *
 
+	private def getBoxIncludingName(name: String) : Box[Filter] = {
+		val box = new Full[Filter](Filter(name))
+		println("Returning a box including the name")
+		box
+	}
+
+	private def getFilterValAsString(filter: Filter) : String = {
+		println("Returning value of filter=" + filter.value)
+		filter.value
+	}
 }

@@ -48,6 +48,12 @@ class ArticlePreviews(filter: Filter) extends CommonSnippet {
 			}
 		}
 
+		/* in real world exception handling should be the better choice:
+			 - this is not correct. It is possible, that no article previews exist for an existing tag,
+			 - IMHO the redirect should be executed, if the tag does not exist
+		 */
+		//if (articles.isEmpty) S.redirectTo("/blog")
+
 		"* *" #> articles.map {article =>
 			"@article-title" #> article.getTitle &
 			"a [href]" #> Article.menu.calcHref(ArticleId(article.getArticleId))
